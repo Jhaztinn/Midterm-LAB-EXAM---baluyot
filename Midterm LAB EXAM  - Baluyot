@@ -1,0 +1,1093 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/*
+ * COURTQUEUE
+ * Barangay Sports Court Booking and Queue Management System
+ *
+ * Main concepts used:
+ * - User Input
+ * - Conditions
+ * - Loops
+ * - Multiple classes
+ * - Objects
+ * - Fields / Attributes
+ * - Constructors
+ * - Methods
+ * - Encapsulation
+ * - Getters and Setters
+ * - this
+ * - Object Relationships
+ * - Inheritance
+ * - extends
+ * - Method Overriding
+ * - @Override
+ * - super
+ * - Polymorphism
+ * - Abstraction
+ * - Interface
+ */
+
+
+/* INTERFACE*/
+
+interface Billable {
+
+    double computeFee();
+
+    String getFeeDescription();
+}
+
+
+/* ABSTRACT PLAYER CLASS  */
+
+abstract class Player implements Billable {
+
+    // Private fields for encapsulation
+    private int playerId;
+    private String name;
+    private String skillLevel;
+    private int gamesPlayed;
+
+    // Constructor
+    public Player(int playerId, String name, String skillLevel) {
+
+        this.playerId = playerId;
+        this.name = name;
+        this.skillLevel = skillLevel;
+        this.gamesPlayed = 0;
+    }
+
+    // Getters
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSkillLevel() {
+        return skillLevel;
+    }
+
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
+    // Setters
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSkillLevel(String skillLevel) {
+        this.skillLevel = skillLevel;
+    }
+
+    public void setGamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
+    }
+
+    // Method
+    public void playGame() {
+        gamesPlayed++;
+    }
+
+    // Abstract method
+    public abstract String getPlayerType();
+
+    // Display player information
+    public void displayInfo() {
+
+        System.out.println("----------------------------------");
+        System.out.println("Player ID: " + playerId);
+        System.out.println("Name: " + name);
+        System.out.println("Player Type: " + getPlayerType());
+        System.out.println("Skill Level: " + skillLevel);
+        System.out.println("Games Played: " + gamesPlayed);
+        System.out.println("Fee: PHP " + String.format("%.2f", computeFee()));
+        System.out.println("Fee Description: " + getFeeDescription());
+        System.out.println("----------------------------------");
+    }
+}
+
+
+/*  REGULAR PLAYER */
+
+class RegularPlayer extends Player {
+
+    public RegularPlayer(
+            int playerId,
+            String name,
+            String skillLevel) {
+
+        super(playerId, name, skillLevel);
+    }
+
+    @Override
+    public String getPlayerType() {
+        return "Regular Player";
+    }
+
+    @Override
+    public double computeFee() {
+        return 50.00;
+    }
+
+    @Override
+    public String getFeeDescription() {
+        return "Regular player fee: PHP 50.00";
+    }
+}
+
+
+/* STUDENT PLAYER */
+
+class StudentPlayer extends Player {
+
+    public StudentPlayer(
+            int playerId,
+            String name,
+            String skillLevel) {
+
+        super(playerId, name, skillLevel);
+    }
+
+    @Override
+    public String getPlayerType() {
+        return "Student Player";
+    }
+
+    @Override
+    public double computeFee() {
+        return 30.00;
+    }
+
+    @Override
+    public String getFeeDescription() {
+        return "Student discount fee: PHP 30.00";
+    }
+}
+
+
+/*  MEMBER PLAYER */
+
+class MemberPlayer extends Player {
+
+    public MemberPlayer(
+            int playerId,
+            String name,
+            String skillLevel) {
+
+        super(playerId, name, skillLevel);
+    }
+
+    @Override
+    public String getPlayerType() {
+        return "Member Player";
+    }
+
+    @Override
+    public double computeFee() {
+        return 20.00;
+    }
+
+    @Override
+    public String getFeeDescription() {
+        return "Barangay member fee: PHP 20.00";
+    }
+}
+
+
+/* COURT CLASS */
+
+class Court {
+
+    private int courtNumber;
+    private String courtType;
+    private boolean occupied;
+    private Player currentPlayer;
+
+    // Constructor
+    public Court(int courtNumber, String courtType) {
+
+        this.courtNumber = courtNumber;
+        this.courtType = courtType;
+        this.occupied = false;
+        this.currentPlayer = null;
+    }
+
+    // Getters
+
+    public int getCourtNumber() {
+        return courtNumber;
+    }
+
+    public String getCourtType() {
+        return courtType;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    // Start a game
+    public void startGame(Player player) {
+
+        if (!occupied) {
+
+            occupied = true;
+            currentPlayer = player;
+
+            player.playGame();
+
+            System.out.println();
+            System.out.println("Game successfully started!");
+            System.out.println("Player: " + player.getName());
+            System.out.println("Court: " + courtNumber);
+            System.out.println("Court Type: " + courtType);
+
+        } else {
+
+            System.out.println(
+                    "Court " + courtNumber + " is already occupied."
+            );
+        }
+    }
+
+    // End a game
+    public void endGame() {
+
+        if (occupied) {
+
+            System.out.println();
+            System.out.println("Game ended successfully!");
+            System.out.println(
+                    "Player: " + currentPlayer.getName()
+            );
+            System.out.println(
+                    "Court: " + courtNumber
+            );
+
+            occupied = false;
+            currentPlayer = null;
+
+        } else {
+
+            System.out.println(
+                    "Court " + courtNumber + " is already available."
+            );
+        }
+    }
+
+    // Display court information
+    public void displayCourt() {
+        System.out.println("Court Number: " + courtNumber);
+        System.out.println("Court Type: " + courtType);
+
+        if (occupied) {
+
+            System.out.println("Status: OCCUPIED");
+
+            if (currentPlayer != null) {
+                System.out.println(
+                        "Current Player: "
+                                + currentPlayer.getName()
+                );
+            }
+
+        } else {
+
+            System.out.println("Status: AVAILABLE");
+        }
+    }
+}
+
+
+/* GAME RECORD CLASS */
+
+class GameRecord {
+
+    private int gameNumber;
+    private int courtNumber;
+    private Player player;
+    private double fee;
+
+    // Constructor
+    public GameRecord(
+            int gameNumber,
+            int courtNumber,
+            Player player) {
+
+        this.gameNumber = gameNumber;
+        this.courtNumber = courtNumber;
+        this.player = player;
+
+        // Polymorphism:
+        // computeFee() depends on the actual Player subclass
+        this.fee = player.computeFee();
+    }
+
+    // Getters
+
+    public int getGameNumber() {
+        return gameNumber;
+    }
+
+    public int getCourtNumber() {
+        return courtNumber;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    // Display game record
+    public void displayRecord() {
+
+        System.out.println("----------------------------------");
+        System.out.println("Game Number: " + gameNumber);
+        System.out.println("Court Number: " + courtNumber);
+        System.out.println("Player: " + player.getName());
+        System.out.println(
+                "Player Type: " + player.getPlayerType()
+        );
+        System.out.println(
+                "Skill Level: " + player.getSkillLevel()
+        );
+        System.out.println(
+                "Fee: PHP " + String.format("%.2f", fee)
+        );
+        System.out.println("----------------------------------");
+    }
+}
+
+
+/* QUEUE MANAGER CLASS */
+
+class QueueManager {
+
+    private ArrayList<Player> players;
+    private ArrayList<Player> waitingQueue;
+    private ArrayList<Court> courts;
+    private ArrayList<GameRecord> gameHistory;
+
+    private int nextGameNumber;
+
+    // Constructor
+    public QueueManager() {
+
+        players = new ArrayList<>();
+        waitingQueue = new ArrayList<>();
+        courts = new ArrayList<>();
+        gameHistory = new ArrayList<>();
+
+        nextGameNumber = 1;
+    }
+
+    /* PLAYER MANAGEMENT*/
+    public void addPlayer(Player player) {
+
+        players.add(player);
+    }
+
+    public Player findPlayer(int playerId) {
+
+        for (Player player : players) {
+
+            if (player.getPlayerId() == playerId) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
+    public void displayPlayers() {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("        REGISTERED PLAYERS");
+        System.out.println("==================================");
+
+        if (players.isEmpty()) {
+
+            System.out.println("No players registered.");
+
+            return;
+        }
+
+        for (Player player : players) {
+
+            player.displayInfo();
+        }
+    }
+
+
+    /* QUEUE MANAGEMENE */
+
+    public void joinQueue(Player player) {
+
+        if (waitingQueue.contains(player)) {
+
+            System.out.println(
+                    player.getName()
+                            + " is already in the queue."
+            );
+
+            return;
+        }
+        waitingQueue.add(player);
+
+        System.out.println();
+        System.out.println(
+                player.getName()
+                        + " successfully joined the queue."
+        );
+
+        System.out.println(
+                "Queue Position: "
+                        + waitingQueue.size()
+        );
+    }
+    public void removeFromQueue(int playerId) {
+
+        Player player = findPlayerInQueue(playerId);
+
+        if (player != null) {
+
+            waitingQueue.remove(player);
+
+            System.out.println(
+                    player.getName()
+                            + " has been removed from the queue."
+            );
+
+        } else {
+
+            System.out.println(
+                    "Player is not in the queue."
+            );
+        }
+    }
+    private Player findPlayerInQueue(int playerId) {
+
+        for (Player player : waitingQueue) {
+
+            if (player.getPlayerId() == playerId) {
+                return player;
+            }
+        }
+        return null;
+    }
+    public void displayQueue() {
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("          WAITING QUEUE");
+        System.out.println("==================================");
+
+        if (waitingQueue.isEmpty()) {
+            System.out.println("The queue is empty.");
+            return;
+        }
+        for (int i = 0; i < waitingQueue.size(); i++) {
+
+            Player player = waitingQueue.get(i);
+
+            System.out.println(
+                    (i + 1)
+                            + ". "
+                            + player.getName()
+                            + " | ID: "
+                            + player.getPlayerId()
+                            + " | "
+                            + player.getPlayerType()
+            );
+        }
+
+        System.out.println("==================================");
+    }
+
+
+    /* COURT MANAGEMENT */
+    public void addCourt(Court court) {
+
+        courts.add(court);
+    }
+
+    public void displayCourts() {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("             COURTS");
+        System.out.println("==================================");
+
+        for (Court court : courts) {
+
+            court.displayCourt();
+        }
+    }
+
+
+    /* START GAME */
+
+    public void startGame(
+            int playerId,
+            int courtNumber) {
+
+        Player player = findPlayerInQueue(playerId);
+
+        // Player must be in queue
+        if (player == null) {
+
+            System.out.println();
+            System.out.println(
+                    "Player must be in the queue "
+                            + "before playing."
+            );
+
+            return;
+        }
+
+        Court selectedCourt = null;
+
+        // Search for court
+        for (Court court : courts) {
+
+            if (court.getCourtNumber() == courtNumber) {
+
+                selectedCourt = court;
+
+                break;
+            }
+        }
+
+        // Court does not exist
+        if (selectedCourt == null) {
+
+            System.out.println(
+                    "Court not found."
+            );
+
+            return;
+        }
+
+        // Court already occupied
+        if (selectedCourt.isOccupied()) {
+
+            System.out.println(
+                    "That court is currently occupied."
+            );
+
+            return;
+        }
+
+        // Start the game
+        selectedCourt.startGame(player);
+
+        // Remove player from queue
+        waitingQueue.remove(player);
+
+        // Create game record
+        GameRecord record = new GameRecord(
+                nextGameNumber,
+                courtNumber,
+                player
+        );
+
+        gameHistory.add(record);
+
+        nextGameNumber++;
+
+        System.out.println();
+        System.out.println(
+                "Game record created successfully."
+        );
+    }
+
+
+    /* END GAME */
+
+    public void endGame(int courtNumber) {
+
+        for (Court court : courts) {
+
+            if (court.getCourtNumber() == courtNumber) {
+
+                if (!court.isOccupied()) {
+
+                    System.out.println();
+                    System.out.println(
+                            "There is no active game "
+                                    + "on this court."
+                    );
+
+                    return;
+                }
+
+                court.endGame();
+
+                return;
+            }
+        }
+
+        System.out.println(
+                "Court not found."
+        );
+    }
+
+
+    /*  GAME HISTORY */
+
+    public void displayGameHistory() {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("           GAME HISTORY");
+        System.out.println("==================================");
+
+        if (gameHistory.isEmpty()) {
+
+            System.out.println(
+                    "No game records yet."
+            );
+
+            return;
+        }
+
+        for (GameRecord record : gameHistory) {
+
+            record.displayRecord();
+        }
+    }
+}
+
+
+/* MAIN APPLICATIO */
+
+public class CourtQueueApp {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        QueueManager manager = new QueueManager();
+
+        // Create courts
+        Court court1 = new Court(
+                1,
+                "Basketball"
+        );
+
+        Court court2 = new Court(
+                2,
+                "Basketball"
+        );
+
+        Court court3 = new Court(
+                3,
+                "Badminton"
+        );
+
+        // Add courts to manager
+        manager.addCourt(court1);
+        manager.addCourt(court2);
+        manager.addCourt(court3);
+
+        int choice;
+
+        // Main menu loop
+        do {
+
+            displayMainMenu();
+
+            choice = getIntegerInput(
+                    scanner,
+                    "Enter your choice: "
+            );
+
+            switch (choice) {
+
+                case 1:
+
+                    registerPlayer(
+                            scanner,
+                            manager
+                    );
+
+                    break;
+
+                case 2:
+
+                    manager.displayPlayers();
+
+                    break;
+
+                case 3:
+
+                    joinQueue(
+                            scanner,
+                            manager
+                    );
+
+                    break;
+
+                case 4:
+
+                    manager.displayQueue();
+
+                    break;
+
+                case 5:
+
+                    manager.displayCourts();
+
+                    break;
+
+                case 6:
+
+                    startGame(
+                            scanner,
+                            manager
+                    );
+
+                    break;
+
+                case 7:
+
+                    endGame(
+                            scanner,
+                            manager
+                    );
+
+                    break;
+
+                case 8:
+
+                    manager.displayGameHistory();
+
+                    break;
+
+                case 9:
+
+                    System.out.println();
+                    System.out.println(
+                            "=================================="
+                    );
+                    System.out.println(
+                            "Thank you for using CourtQueue!"
+                    );
+                    System.out.println(
+                            "=================================="
+                    );
+
+                    break;
+
+                default:
+
+                    System.out.println();
+                    System.out.println(
+                            "Invalid menu choice."
+                    );
+                    System.out.println(
+                            "Please choose from 1 to 9."
+                    );
+            }
+
+        } while (choice != 9);
+
+        scanner.close();
+    }
+
+
+    /*  MAIN MENU */
+
+    public static void displayMainMenu() {
+
+        System.out.println();
+        System.out.println("======================================");
+        System.out.println("             COURTQUEUE");
+        System.out.println(" Barangay Sports Court Management");
+        System.out.println("        By: Jhaztintroy Baluyot");
+        System.out.println("======================================");
+        System.out.println("1. Register Player");
+        System.out.println("2. View Players");
+        System.out.println("3. Join Queue");
+        System.out.println("4. View Queue");
+        System.out.println("5. View Courts");
+        System.out.println("6. Start Game");
+        System.out.println("7. End Game");
+        System.out.println("8. View Game History");
+        System.out.println("9. Exit");
+        System.out.println("======================================");
+    }
+
+
+    /* INTEGER INPUT VALIDATIO*/
+
+    public static int getIntegerInput(
+            Scanner scanner,
+            String message) {
+
+        while (true) {
+
+            System.out.print(message);
+
+            if (scanner.hasNextInt()) {
+
+                int number = scanner.nextInt();
+
+                scanner.nextLine();
+
+                return number;
+
+            } else {
+
+                System.out.println(
+                        "Invalid input."
+                                + " Please enter a number."
+                );
+
+                scanner.nextLine();
+            }
+        }
+    }
+
+
+    /* REGISTER PLAYE */
+
+    public static void registerPlayer(
+            Scanner scanner,
+            QueueManager manager) {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("         REGISTER PLAYER");
+        System.out.println("==================================");
+
+        int id = getIntegerInput(
+                scanner,
+                "Enter Player ID: "
+        );
+
+        // Check duplicate ID
+        if (manager.findPlayer(id) != null) {
+
+            System.out.println();
+            System.out.println(
+                    "Player ID already exists."
+            );
+
+            return;
+        }
+
+        System.out.print("Enter Name: ");
+
+        String name = scanner.nextLine();
+
+        // Check empty name
+        if (name.trim().isEmpty()) {
+
+            System.out.println(
+                    "Name cannot be empty."
+            );
+
+            return;
+        }
+
+        System.out.print(
+                "Enter Skill Level "
+                        + "(Beginner/Intermediate/Advanced): "
+        );
+
+        String skill = scanner.nextLine();
+
+        // Check empty skill
+        if (skill.trim().isEmpty()) {
+
+            System.out.println(
+                    "Skill level cannot be empty."
+            );
+
+            return;
+        }
+
+        System.out.println();
+        System.out.println("Player Type:");
+        System.out.println(
+                "1. Regular Player - PHP 290.00"
+        );
+        System.out.println(
+                "2. Student Player - PHP 270.00"
+        );
+        System.out.println(
+                "3. Member Player - PHP 250.00"
+        );
+
+        int type = getIntegerInput(
+                scanner,
+                "Choose player type: "
+        );
+
+        Player player;
+
+        // Polymorphism
+        switch (type) {
+
+            case 1:
+
+                player = new RegularPlayer(
+                        id,
+                        name,
+                        skill
+                );
+
+                break;
+
+            case 2:
+
+                player = new StudentPlayer(
+                        id,
+                        name,
+                        skill
+                );
+
+                break;
+
+            case 3:
+
+                player = new MemberPlayer(
+                        id,
+                        name,
+                        skill
+                );
+
+                break;
+
+            default:
+
+                System.out.println(
+                        "Invalid player type."
+                );
+
+                return;
+        }
+
+        manager.addPlayer(player);
+
+        System.out.println();
+        System.out.println(
+                "Player successfully registered!"
+        );
+
+        System.out.println(
+                "Player: " + player.getName()
+        );
+
+        System.out.println(
+                "Type: " + player.getPlayerType()
+        );
+
+        System.out.println(
+                "Fee: PHP "
+                        + String.format(
+                                "%.2f",
+                                player.computeFee()
+                        )
+        );
+    }
+
+
+    /* JOIN QUEUE */
+
+    public static void joinQueue(
+            Scanner scanner,
+            QueueManager manager) {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("            JOIN QUEUE");
+        System.out.println("==================================");
+
+        int id = getIntegerInput(
+                scanner,
+                "Enter Player ID: "
+        );
+
+        Player player = manager.findPlayer(id);
+
+        if (player == null) {
+
+            System.out.println();
+            System.out.println(
+                    "Player not found."
+            );
+
+            System.out.println(
+                    "Please register the player first."
+            );
+
+            return;
+        }
+
+        manager.joinQueue(player);
+    }
+
+
+    /*  START GAME */
+
+    public static void startGame(
+            Scanner scanner,
+            QueueManager manager) {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("            START GAME");
+        System.out.println("==================================");
+
+        int playerId = getIntegerInput(
+                scanner,
+                "Enter Player ID: "
+        );
+
+        int courtNumber = getIntegerInput(
+                scanner,
+                "Enter Court Number: "
+        );
+
+        manager.startGame(
+                playerId,
+                courtNumber
+        );
+    }
+
+
+    /*  END GAME */
+
+    public static void endGame(
+            Scanner scanner,
+            QueueManager manager) {
+
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("             END GAME");
+        System.out.println("==================================");
+
+        int courtNumber = getIntegerInput(
+                scanner,
+                "Enter Court Number: "
+        );
+
+        manager.endGame(courtNumber);
+    }
+}
